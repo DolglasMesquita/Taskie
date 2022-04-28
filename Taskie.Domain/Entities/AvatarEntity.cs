@@ -8,10 +8,6 @@ namespace Taskie.Domain.Entities
         public string Desciption { get; set; }
 
         [Required]
-<<<<<<< HEAD
-        public string Src { get; set; }
-=======
         public string Image { get; set; }
->>>>>>> develop
     }
 }

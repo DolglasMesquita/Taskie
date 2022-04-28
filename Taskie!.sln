@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31911.196
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32516.85
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{D57D3787-A9DA-4927-BC33-89B1F5652900}"
 EndProject
@@ -19,11 +19,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{F3003691-6674-4F81-BCDD-B1ABB73FDA9A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taskie.Infra.Data", "Taskie.Infra.Data\Taskie.Infra.Data.csproj", "{D5027608-0B06-48CF-ADC7-F54AD5C5E065}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Taskie.Infra.Data", "Taskie.Infra.Data\Taskie.Infra.Data.csproj", "{D5027608-0B06-48CF-ADC7-F54AD5C5E065}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CrossCutting", "CrossCutting", "{9B1E5B3C-842D-482E-9EE1-45BAC2D3F17A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taskie.Infra.CrossCutting", "Taskie.Infra.CrossCutting\Taskie.Infra.CrossCutting.csproj", "{05A1F51E-C9E6-4363-914D-158E805A69D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Taskie.Infra.CrossCutting", "Taskie.Infra.CrossCutting\Taskie.Infra.CrossCutting.csproj", "{05A1F51E-C9E6-4363-914D-158E805A69D9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.Test", "Data.Test\Data.Test.csproj", "{C3050049-4F72-4CB1-862C-436BBA4C7942}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{05A1F51E-C9E6-4363-914D-158E805A69D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{05A1F51E-C9E6-4363-914D-158E805A69D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{05A1F51E-C9E6-4363-914D-158E805A69D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3050049-4F72-4CB1-862C-436BBA4C7942}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3050049-4F72-4CB1-862C-436BBA4C7942}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3050049-4F72-4CB1-862C-436BBA4C7942}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3050049-4F72-4CB1-862C-436BBA4C7942}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
