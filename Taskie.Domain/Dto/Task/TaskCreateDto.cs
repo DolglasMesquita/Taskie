@@ -16,9 +16,11 @@ namespace Taskie.Domain.Dto.Task
         public PriorityEnum Priority { get; set; }
 
         [Required]
-        public DateTime? Deadline { get; set; }
+        public DateTime Deadline { get; set; }
 
         [Required]
         public string UserId { get; set; }
+
+        public DateTime CreatedAt { get; set; } = DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
     }
 }

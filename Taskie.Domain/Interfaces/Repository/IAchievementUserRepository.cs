@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Taskie.Domain.Dto.Achievement;
 using Taskie.Domain.Entities;
 
 namespace Taskie.Domain.Interfaces.Repository

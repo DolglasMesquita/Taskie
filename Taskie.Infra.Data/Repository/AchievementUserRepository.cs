@@ -51,7 +51,7 @@ namespace Taskie.Infra.Data.Repository
             List<AchievementEntity> notObtained = (from AchievementEntity achievement in achievements
                                                    let obtIds = from achievementUser in query
                                                                 select achievementUser.AchievementId
-                                                   where obtIds.Contains(achievement.Id) == true
+                                                   where obtIds.Contains(achievement.Id) != true
                                                    select achievement).ToList();
 
             return notObtained;

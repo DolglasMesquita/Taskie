@@ -65,36 +65,44 @@ namespace Taskie.Infra.Data.Repository
             return await task.AsNoTracking().ToListAsync();
         }
 
-        public async Task<IEnumerable<TaskEntity>> GetByFinishedInTimeAsync(string idUser, bool inTime)
+        public async Task<IEnumerable<TaskEntity>> GetByFinishedInTimeAsync(string idUser)
         {
             IQueryable<TaskEntity> tasks = _context.Tasks.Where(t => t.UserId == idUser)
-                                            .Where(T => T.FinishedInTime == inTime);
+                                            .Where(T => T.FinishedInTime == true);
 
             return await tasks.AsNoTracking().ToListAsync();
         }
 
-        public async Task<IEnumerable<TaskEntity>> GetByFinishedInTimeByPriorityAsync(int priority)
-        {
-            IQueryable<TaskEntity> query = _context.Tasks;
-            query = query.Where(T => T.FinishedInTime == true && T.Priority.Equals(priority));
-            return await query.AsNoTracking().ToListAsync();
-        }
-
-        public async Task<IEnumerable<TaskEntity>> GetByFinishedInTimeByPriorityAsync(string idUser, int priority)
+        public async Task<int> GetFinishedInTimeByPriorityAsync(string idUser, int priority)
         {
             IQueryable<TaskEntity> query = _context.Tasks.Where(t => t.UserId == idUser)
-                    .Where(t => t.FinishedInTime == true && t.Priority.Equals(priority));
+                    .Where(t => t.FinishedInTime == true && (int)t.Priority == priority);
 
-            return await query.AsNoTracking().ToListAsync();
+            return await query.AsNoTracking().CountAsync();
         }
 
         public async Task<IEnumerable<TaskEntity>> GetByPriorityAsync(string idUser, int priority)
         {
             IQueryable<TaskEntity> tasks = _context.Tasks.Where(t => t.UserId == idUser)
-                                            .Where(t => t.Priority.Equals(priority));
+                                            .Where(t => (int)t.Priority == priority);
 
             return await tasks.AsNoTracking().ToListAsync();
         }
 
+        public async Task<IEnumerable<TaskEntity>> GetAllPendingByUserAsync(string idUser)
+        {
+            IQueryable<TaskEntity> tasks = _context.Tasks.Where(t => t.UserId == idUser)
+                               .Where(t => t.Finished == null).OrderBy(t => t.CreatedAt);
+
+            return await tasks.AsNoTracking().ToListAsync();
+        }
+
+        public async Task<IEnumerable<TaskEntity>> GetFinishedByPriorityAsync(string idUser, int priority)
+        {
+            IQueryable<TaskEntity> query = _context.Tasks.Where(t => t.UserId == idUser)
+                                            .Where(t => t.Finished != null && (int)t.Priority == priority);
+
+            return await query.AsNoTracking().ToListAsync();
+        }
     }
 }

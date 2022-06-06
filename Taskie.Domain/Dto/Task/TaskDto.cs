@@ -17,5 +17,7 @@ namespace Taskie.Domain.Dto.Task
 
         public DateTime? Deadline { get; set; }
 
+        public DateTime CreatedAt { get; set; } 
+
     }
 }

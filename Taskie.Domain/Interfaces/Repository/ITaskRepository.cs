@@ -11,9 +11,10 @@ namespace Taskie.Domain.Interfaces.Repository
         Task<bool> DeleteAsync(int id);
         Task<TaskEntity> GetByIdAsync(int id);
         Task<IEnumerable<TaskEntity>> GetAllByUserAsync(string idUser);
+        Task<IEnumerable<TaskEntity>> GetAllPendingByUserAsync(string idUser);
         Task<IEnumerable<TaskEntity>> GetByPriorityAsync(string idUser, int priority);
         Task<IEnumerable<TaskEntity>> GetByFinishAsync(string idUser);
-        Task<IEnumerable<TaskEntity>> GetByFinishedInTimeAsync(string idUser, bool inTime);
-        Task<IEnumerable<TaskEntity>> GetByFinishedInTimeByPriorityAsync(string idUser, int priority);
+        Task<IEnumerable<TaskEntity>> GetByFinishedInTimeAsync(string idUser);
+        Task<int> GetFinishedInTimeByPriorityAsync(string idUser, int priority);
     }
 }

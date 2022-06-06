@@ -20,7 +20,7 @@ namespace Taskie.Domain.Entities
         public bool? FinishedInTime { get; set; } = null;
 
         [Required]
-        public DateTime? Deadline { get; set; }
+        public DateTime Deadline { get; set; }
 
         public string UserId { get; set; }
 
