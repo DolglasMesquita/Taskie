@@ -28,6 +28,7 @@ namespace Taskie.Infra.Data.Extensions
             services.AddScoped<ITrophyRepository, TrophyRepository>();
             services.AddScoped<ITrophyUserRepository, TrophyUserRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ITaskRepository, TaskRepository>();
 
             return services;
         }

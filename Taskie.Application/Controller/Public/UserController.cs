@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Taskie.Domain.Dto.User;
 using System.Net;
 using System;
+using Taskie.Domain.Dto.TrophyUser;
 
 namespace Taskie.Application.Controller
 {
@@ -62,11 +63,11 @@ namespace Taskie.Application.Controller
                 UserDto userVerification = await _userService.GetById(userId);
                 if (userVerification.EmailConfirmed) return Ok("Seu email já foi confirmado, pode usar a vontade :D");
 
-                UserDto user = await _userService.ConfirmEmail(userId, token);
+                bool result = await _userService.ConfirmEmail(userId, token);
 
-                if (user != null) return Ok(user);
+                if (result) return Ok("Email confirmado com sucesso!");
  
-                return BadRequest();
+                return BadRequest("Erro ao confirmar email :(");
             }
             catch (ArgumentException e)
             {
@@ -112,5 +113,54 @@ namespace Taskie.Application.Controller
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"ERRO {e.Message}");
             }
         }
+
+        [HttpPost("changepassword")]
+        public async Task<IActionResult> ChangePassword(UserUpdatePassword userUpdatePassword)
+        {
+            if (userUpdatePassword.Password == userUpdatePassword.NewPassword)
+                return BadRequest("Esta já é sua senha atual");
+
+            bool result = await _userService.ChangePassword(userUpdatePassword);
+
+            if(result) return Ok("Senha alterada com sucesso!");
+
+            return BadRequest("Senha atual incorreta");
+        }
+
+        [HttpPost("update")]
+        public async Task<IActionResult> UpdateUser(UserUpdateDto userUpdateDto)
+        {
+            try
+            {
+
+                var result = await _userService.UpdateUser(userUpdateDto);
+
+                if (result.Succeeded) return Ok("Usuário editado com sucesso!");
+
+                return BadRequest("Erro ao editar usuário");
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"ERRO {e.Message}");
+            }
+        }
+
+        [HttpPost("buytrophies")]
+        public async Task<IActionResult> BuyTrophies(TrophyUserCreateDto trophyUserCreate)
+        {
+            try
+            {
+                var result = await _userService.BuyTrophies(trophyUserCreate);
+
+                if (result != null) return Ok(result);
+
+                return BadRequest();
+            }
+            catch (Exception e)
+            {
+                return this.StatusCode(StatusCodes.Status400BadRequest, $"ERRO {e.Message}");
+            }
+        }
+
     }
 }

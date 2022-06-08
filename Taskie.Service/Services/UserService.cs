@@ -10,23 +10,33 @@ using System.Net.Mail;
 using AutoMapper;
 using System.Net;
 using System;
+using Taskie.Domain.Dto.TrophyUser;
+using Taskie.Domain.Dto.Trophy;
 
 namespace Taskie.Service.Services
 {
     public class UserService : IUserService
     {
         private readonly UserManager<UserEntity> _userManager;
+        private readonly SignInManager<UserEntity> _signInManager;
         private readonly IMapper _mapper;
         private readonly IUserRepository _userRepository;
         private readonly EmailSettings _mailSettings;
+        private readonly ITrophyRepository _trophyRepository;
+        private readonly ITrophyUserRepository _trophyUserRepository;
+
 
         public UserService(UserManager<UserEntity> userManager, IMapper mapper,
-            IUserRepository userRepository, EmailSettings emailSettings)
+            SignInManager<UserEntity> signInManager, IUserRepository userRepository, 
+            EmailSettings emailSettings, ITrophyUserRepository trophyUserRepository, ITrophyRepository trophyRepository)
         {
             _userManager = userManager;
-            _mapper = mapper;
+            _signInManager = signInManager;
             _userRepository = userRepository;
             _mailSettings = emailSettings;
+            _mapper = mapper;
+            _trophyRepository = trophyRepository;
+            _trophyUserRepository = trophyUserRepository;
         }
 
         public async Task<UserDto> GetById(string id)
@@ -53,19 +63,21 @@ namespace Taskie.Service.Services
             throw new InvalidOperationException("Ocorreu um erro ao criar o usuário!");
         }
 
-        public async Task<UserDto> ConfirmEmail(string userId, string token)
+        public async Task<bool> ConfirmEmail(string userId, string token)
         {
             var user = await _userManager.FindByIdAsync(userId);
             var result = await _userManager.ConfirmEmailAsync(user, token);
 
-            if (result.Succeeded) return _mapper.Map<UserDto>(user);
+            if (result.Succeeded) return true;
 
-            throw new InvalidOperationException("Ocorreu um erro ao confirmar o Email!");
+            else return false;
         }
 
-        public Task<UserEntity> DisabledUser(string id)
+        public async Task<bool> DisabledUser(string userId)
         {
-            throw new NotImplementedException();
+            bool result = await _userRepository.DisableUserAsync(userId);
+
+            return result;
         }
 
         public async Task<IEnumerable<UserDto>> GetAll()
@@ -88,19 +100,24 @@ namespace Taskie.Service.Services
                $"Clique no link para confirmar seu email {confirmationLink}");
         }
 
-        public Task<UserEntity> SumPonits(UserUpdateDto user)
+        public async Task<bool> UpdateAvatar(string userId, int avatarId)
         {
-            throw new NotImplementedException();
+            bool result = await _userRepository.UpdateAvatarAsync(userId, avatarId);
+
+            return result;
         }
 
-        public Task<UserEntity> UpdateAvatar(UserUpdateDto user)
+        public async Task<IdentityResult> UpdateUser(UserUpdateDto userUpdateDto)
         {
-            throw new NotImplementedException(); 
-        }
+            UserEntity user = await _userRepository.GetUserByIdAsync(userUpdateDto.Id);
 
-        public Task<UserEntity> UpdateUser(UserUpdateDto user)
-        {
-            throw new NotImplementedException();
+            user.Name = userUpdateDto.Name;
+            user.PhoneNumber = userUpdateDto.PhoneNumber;
+
+            var result = await _userManager.UpdateAsync(user);
+
+            return result;
+
         }
 
         public async Task<string> GenerateConfirmedToken(string userId)
@@ -111,6 +128,59 @@ namespace Taskie.Service.Services
             return confirmationToken;
         }
 
+        public async Task<bool> ChangePassword(UserUpdatePassword userUpdatePassword)
+        {
+            
+            UserEntity user = await _userRepository.GetUserByIdAsync(userUpdatePassword.Id);
 
+            var result = await _signInManager.CheckPasswordSignInAsync(user, userUpdatePassword.Password, false);
+
+            if(result.Succeeded)
+            {
+                var resultUpdate = await _userManager.ChangePasswordAsync(user,
+                                                                        userUpdatePassword.Password,
+                                                                        userUpdatePassword.NewPassword);
+                if (resultUpdate.Succeeded) return true;
+            }
+
+            return false;
+        }
+
+        public async Task<TrophyDto> BuyTrophies(TrophyUserCreateDto trophyUserCreate)
+        {
+            var user = await _userRepository.GetUserByIdAsync(trophyUserCreate.UserId);
+            var trophy = await _trophyRepository.GetIdAsync(trophyUserCreate.TrophyId);
+
+            if (user == null || trophy == null)
+            {
+                throw new InvalidOperationException("Ocorreu um erro ao tentar realizar a operação, tente novamente");
+            }
+
+            var obtained = await _trophyUserRepository.GetAllTrophiesByUserIdAsync(trophyUserCreate.UserId);
+
+            foreach (var item in obtained)
+            {
+                if (item.Id == trophyUserCreate.TrophyId)
+                {
+                    throw new InvalidOperationException("Você já possui este troféu!");
+                }
+            }
+
+            if (user.Point >= trophy.PricePoints)
+            {
+                var trophyUser = _mapper.Map<TrophyUserEntity>(trophyUserCreate);
+
+                await _trophyUserRepository.CreateAsync(trophyUser);
+
+                user.Point -= trophy.PricePoints;
+
+                await _userManager.UpdateAsync(user);
+
+
+                return _mapper.Map<TrophyDto>(trophy);
+            }
+
+            throw new InvalidOperationException("Você não possui pontos suficientes para comprar o troféu");
+        }
     }
 }
