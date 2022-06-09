@@ -45,9 +45,5 @@ namespace Taskie.Infra.Data.Repository
 
             return await query.AsNoTracking().ToListAsync();
         }
-<<<<<<< HEAD
-=======
-
->>>>>>> develop
     }
 }
