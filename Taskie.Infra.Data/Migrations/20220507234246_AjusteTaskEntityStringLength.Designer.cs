@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Taskie.Infra.Data.Context;
 
 namespace Taskie.Infra.Data.Migrations
 {
     [DbContext(typeof(TaskieContext))]
-    partial class TaskieContextModelSnapshot : ModelSnapshot
+    [Migration("20220507234246_AjusteTaskEntityStringLength")]
+    partial class AjusteTaskEntityStringLength
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -401,7 +403,7 @@ namespace Taskie.Infra.Data.Migrations
 
                     b.HasKey("UserId", "TrophyId");
 
-                    b.HasIndex("TropyId");
+                    b.HasIndex("TrophyId");
 
                     b.ToTable("TrophiesUsers");
                 });
@@ -495,7 +497,6 @@ namespace Taskie.Infra.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("Taskie.Domain.Entities.UserEntity", "User")
-
                         .WithMany("AchievementsUser")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -517,19 +518,19 @@ namespace Taskie.Infra.Data.Migrations
 
             modelBuilder.Entity("Taskie.Domain.Entities.TrophyUserEntity", b =>
                 {
-
                     b.HasOne("Taskie.Domain.Entities.TrophyEntity", "Trophy")
                         .WithMany()
-                        .HasForeignKey("TropyId");
+                        .HasForeignKey("TrophyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Taskie.Domain.Entities.UserEntity", "User")
-
                         .WithMany("TrophiesUser")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Tropy");
+                    b.Navigation("Trophy");
 
                     b.Navigation("User");
                 });
@@ -547,7 +548,6 @@ namespace Taskie.Infra.Data.Migrations
 
             modelBuilder.Entity("Taskie.Domain.Entities.UserEntity", b =>
                 {
-
                     b.Navigation("AchievementsUser");
 
                     b.Navigation("TrophiesUser");
