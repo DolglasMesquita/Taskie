@@ -14,11 +14,6 @@ namespace Taskie.Domain.Entities
 
         [Required]
         public PriorityEnum Priority { get; set; }
-<<<<<<< HEAD
-        public bool Finished { get; set; } = false;
-        public bool FinishedInTime { get; set; }
-        public DateTime Deadline { get; set; }
-=======
 
         public DateTime? Finished { get; set; } = null;
 
@@ -27,7 +22,6 @@ namespace Taskie.Domain.Entities
         [Required]
         public DateTime Deadline { get; set; }
 
->>>>>>> develop
         public string UserId { get; set; }
 
         public UserEntity User { get; set; }
